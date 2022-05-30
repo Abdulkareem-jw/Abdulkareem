@@ -1,0 +1,229 @@
+﻿@model BookViewModel
+@{
+    Layout = "~/Views/Shared/LayoutBageShared.cshtml";
+}
+
+@section head{
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var path=$(this).find("#ImagePath").text();
+        if(path!="")
+        {
+        
+        console.log(path);
+        sessionStorage.setItem("path", path);
+        $("#SetPath").find("img").attr("src",path);
+        
+        }
+        
+    });
+    </script>
+}
+
+@section body{
+<input type="hidden" value="Books" id="Name" />
+<span style="display:none" id="ImagePath">@ViewData["ImagePath"]</span>
+<form method="post" enctype="multipart/form-data">
+<div class="row">
+    <div class="col-lg-6" style="/* margin-right: 557px; *//* float: left; */">
+        <div style="/* margin-left: 14px; *//* float: left; */">
+            <a style="cursor: pointer;" href="/BookShop/Book/AddNewBook"><span class="SectionName SharedColor" style="margin-right: 8px;cursor: pointer;">Book Stor</span></a>
+            <i id="SetIconHere">
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-right" viewBox="0 0 16 16" style="width: 1.5rem;height: 1.5rem;color: #CF93D9;margin-left: 1px;">
+                    <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"></path>
+                </svg>
+            </i>
+            <span class="SharedFont SectionName SharedColor" id="here" style="margin-left: 9px;">Books</span>
+
+        </div>
+    </div>
+    <div class="col-lg-5" style="/* clear: right; */margin-left: 84px;margin-top: 3px;">
+
+
+
+
+        <div class="header_img" style="float: right"id="SetPath"><img style="width: 100%;" /> </div>
+        <a id="signout" asp-action="SingOut" asp-controller="User" class="nav_link" style="float: right;/* margin-left: 0px; */margin-right: 23px;"> <i class="bx bx-log-out nav_icon SharedMainColor"></i> <span class="nav_name">SignOut</span> </a>
+
+
+    </div>
+</div>
+ <div class="row">
+		<div class="col-lg-3" style="/* margin-right: 10px; */"><button id="btn" type="button" class="btn btn-primary btn_category SharedForButton" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float: left;margin-left: 28px;width: 202px;">Add New Category</button></div>
+		<div class="col-lg-9" style="/* margin-right: 0px; */">
+			<div class="input-group" style="margin-top: 26px;">
+				<div class="form-outline">
+					<input type="search" id="form1" name="search" class="form-control" style="width: 438px;" placeholder="Search"
+                    @{
+                            if((string)ViewData["ErrorSearch"]=="")
+                            {
+                                ViewData["ErrorSearch"]="Search";
+                            }
+                            else if((string)ViewData["ErrorSearch"]=="Required Field!!!")
+                            {
+                                ViewData["ErrorSearch"]="Required Field!!!";
+                            }
+                            
+                        }
+                        placeholder="@ViewData["ErrorSearch"]"
+                    >
+                    
+
+				</div>
+				
+				<button type="submit" class="btn btn-primary SharedForButton" style="box-shadow: none;width: 86px;" asp-action="SearchByName">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+				</svg>
+			</button>
+			<button type="submit" class="btn btn-primary SharedForButton" style="margin-left: 7px;box-shadow: none;width: 99px;" asp-action="AddNewBook">All</button>
+			<button type="submit" class="btn btn-primary SharedForButton" style="margin-left: 7px;box-shadow: none;width: 163px;" asp-action="DeleteAllBooks">Trush All</button>
+			</div>
+		</div>
+	</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="SharedFont">#</th>
+            <th class="SharedFont">Image</th>
+            <th class="SharedFont">Title</th>
+            <th class="SharedFont">Year</th>
+            <th class="SharedFont">Price</th>
+            <th class="SharedFont">Memory Improvment</th>
+            <th class="SharedFont">Catgory</th>
+            <th class="SharedFont">Language</th>
+            <th class="SharedFont">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Book item in Model.Books)
+        {
+        <tr>
+            <td class="SharedFont" value="@item.Id">@ViewData["Number"]</td>
+            <td class="SharedFont"><img width="35" src="@item.Path" /></td>
+            <td class="SharedFont">@item.Title</td>
+            <td class="SharedFont">@item.Year</td>
+            <td class="SharedFont">@item.Price</td>
+            <td class="SharedFont">@item.MemoryImprovment</td>
+            <td class="SharedFont">@item.category.Name</td>
+            <td class="SharedFont">@item.Language</td>
+            <td class="SharedFont">
+               
+                <a asp-action="UpdateBook" asp-route-id="@item.Id">Edit</a>
+                <a   asp-route-id="@item.Id" asp-action="DeleteBook" >Delete</a>
+               
+            </td>
+        </tr>
+        @if((int)ViewData["Number"]!=0)
+        {
+            int x=(int)ViewData["Number"];
+            ViewData["Number"]=++x;
+        }
+
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+
+    <div class="container" id="key">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" style="width:100%">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header MainColorBody">
+                                <h5 class="modal-title SharedFont SaherdSize" id="staticBackdropLabel">New Book</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body MainColorBody">
+
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Title</span></label>
+                                        <label class="col-lg-10 _space"><input type="text" class="form-control" asp-for="book.Title"></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Year</span></label>
+                                        <label class="col-lg-10 _space"><input type="date" class="form-control" asp-for="book.Year"></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Price</span></label>
+                                        <label class="col-lg-10 _space"><input type="text" class="form-control" asp-for="book.Price"/></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Language</span></label>
+                                        <label class="col-lg-10 _space"><input type="text" class="form-control" asp-for="book.Language"/></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Memory Improvment</span></label>
+                                        <label class="col-lg-10 _space"><input type="text" class="form-control" asp-for="book.MemoryImprovment"/></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Category</span></label>
+                                        <label class="col-lg-10 _space"><select style="box-shadow: none;border-color: #003160;" class="form-control" asp-items=' new SelectList(@Model.liCategory,"Id","Name")' asp-for="book.CategoryId"></select></label>
+                                    </div>
+                                </div>
+                                <div class="row row_space">
+                                    <div class="form-group">
+                                        <label class="col-lg-1"><span>Auther</span></label>
+                                        <label class="col-lg-10 _space"><select style="box-shadow: none;border-color: #003160;" class="form-control" asp-items=' new SelectList(@Model.liAuther,"Id","FullName")' asp-for="book.AutherId"></select></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer MainColorBody">
+                                 <input id="in" type="file" asp-for="book.Image" style="display: none;">
+                                <label for="in" class="btn btn-primary" style="margin-right: 181px;background-color: #CF93D9;border-color: #CF93D9;">Choose Photo</label>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                @if((bool) ViewData["updateMessage"])
+                                {
+                                <input type="submit" class="btn btn-primary" value="Update" asp-action="SaveUpdateBook" asp-route-id="@Model.book.Id" />
+                                }
+                                else
+                                {
+                                <input type="submit" class="btn btn-primary" value="Save" asp-action="SaveNewBook" />
+                                if ((int)ViewData["InsertMessage"] == 1)
+                                {
+                                    <script type="text/javascript">
+                                    
+                                    $(function(){
+                                        alert("Added Successfully");
+                                    }) 
+                                    
+                                    </Script>
+                                }
+                                else if((int)ViewData["InsertMessage"] == 0)
+                                {
+                                     <script type="text/javascript">
+                                    
+                                    $(function(){
+                                        alert("Somethis Wrong,Please Fill All Field!!!");
+                                    }) 
+                                    
+                                    </Script>
+                                }
+                                
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+}

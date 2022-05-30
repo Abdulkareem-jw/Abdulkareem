@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.0.0",
+      "destination": "wwwroot/bootstrap/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/jquery/"
+    },
+    {
+      "library": "boxicons@2.1.2",
+      "destination": "wwwroot/boxicons/"
+    },
+    {
+      "library": "twitter-bootstrap@3.4.1",
+      "destination": "wwwroot/twitter-bootstrap/"
+    },
+    {
+      "library": "favico.js@0.3.10",
+      "destination": "wwwroot/favico.js/"
+    }
+  ]
+}
